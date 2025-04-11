@@ -1,41 +1,81 @@
-package Codificacion;
+package string_compressor;
 
-public class Ejercicio1 {
+public class SimpleStringCompressor {
+
+
 	public static void main(String[] args) {
-		
-		compress("abc");
-
 	
-			
-
-	}
-	public static void compress(String a) {
-		String vacio = "";
-		String copiaCadena = a;
-		int cont = 0;
-		int contPos = 0;
+		String  str = "aaaabbbcca";
+		System.out.println(str + " -> " + SimpleStringCompressor.compress(str));
+		str = "abbcccaaaa";
+		System.out.println(str  + " -> " +  SimpleStringCompressor.compress(str));
+		str = "abca";
+		System.out.println(str  + " -> " + SimpleStringCompressor.compress(str));
 		
-		for(int i=0;i<a.length();i++) { 
-			for(int j=0;j<a.length();j++) {
-				if(a.charAt(i) == a.charAt(j)) {
-					cont++;
-                    contPos++;
-					
-				}
+		
+		str = "a3b12c3";
+		System.out.println(str + " -> " + SimpleStringCompressor.decompress(str));
+		str = "a3b12c10";
+		System.out.println(str + " -> " + SimpleStringCompressor.decompress(str));
+	
+		
+	}
+	
+	public static String compress(String str ) {	
+	
+		String compressedStr = "";
+		int length = str.length();
+		int i = 0; 
+		while(i < length) {
+			int count = 1;
+			while(  i+count < length && 
+					str.charAt(i)==str.charAt(i+count)) {
+				count++;
 			}
-			a = a.substring(contPos-1,a.length());
-	        String caracter = String.valueOf(a.charAt(i));
-	        vacio += caracter+cont;
-	        cont = 0;
-	        contPos= 0;
+			compressedStr = compressedStr + str.charAt(i) + count;
+			i += count;
 		}
-		if(a.length()<=copiaCadena.length()){
-            System.out.print("cadena comprimida: "+vacio);
-        }else {
-            System.out.println(copiaCadena);
-        }
+
+		return compressedStr;
 		
 	}
+	
+	public static String decompress(String str) {
+		
+		String decompressedStr  = "";
+		int length = str.length();
+		int i = 0; 
+		while(i < length) {
+			
+			String charRepeatable = String.valueOf(str.charAt(i));
+			String trunk = charRepeatable;
+			int count = 1;
+
+			int j = i+1;
+			while(j < length &&
+					str.charAt(j) >= '0' &&
+					str.charAt(j) <= '9'
+					) {
+				 j++;
+			}
+			
+			int repeatLimit= Integer.parseInt(str.substring(i+1, j));
+								
+			while(count < repeatLimit ) {
+				trunk += charRepeatable;
+				count++;
+			}
+			
+			decompressedStr += trunk;
+			i=j;
+			
+		}
+
+		return decompressedStr;
+		
+	}
+	
+	
 }
 
 
